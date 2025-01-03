@@ -54,22 +54,25 @@ controller = Controller()
 def main():
 
     # Set working directory to src
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+    workDir = os.path.dirname(os.path.abspath(sys.executable))
+    if ("windowsapps" in workDir.lower()) or ("program files" in workDir.lower()):
+        print("Manual run detected, swapping directory...")
+        workDir = os.path.dirname(os.path.abspath(__file__))
+
+    os.chdir(workDir)
 
     try:
-        with open("../profanity.txt", "r") as f:
+        with open("profanity.txt", "r") as f:
             for line in f:
                 data = line.split("-")
                 profanity[data[0]] = data[1].replace("\n", "")
-    except FileNotFoundError:
-        print("Profanity file not found")
-        return
     except Exception as e:
         print(f"Error reading profanity file: {e}")
         return
 
     try:
-        with open("../positivitymode.txt", "r") as f:
+        with open("positivitymode.txt", "r") as f:
             positivityModeMessage = f.read()
     except FileNotFoundError:
         print("Positivity Mode file not found")
